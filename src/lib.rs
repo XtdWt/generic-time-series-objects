@@ -4,7 +4,7 @@ use std::vec::Vec;
 #[pyclass]
 struct TimeSeriesObject {
     keys: Vec<i32>,
-    values: Vec<i32>,
+    values: Vec<Py<PyAny>>,
 }
 
 #[pymethods]
@@ -14,14 +14,14 @@ impl TimeSeriesObject {
         TimeSeriesObject {keys: Vec::new(), values: Vec::new()}
     }
 
-    fn add(&mut self, key: i32, value: i32) {
+    fn add(&mut self, key: i32, value: Py<PyAny>) {
         self.keys.push(key);
         self.values.push(value);
     }
 
-    fn show(&self) {
-        println!("{:?}", self.keys);
-        println!("{:?}", self.values);
+    fn get(&self, key: i32) -> &Py<PyAny> {
+        let value = &self.values[key as usize];
+        value
     }
 }
 
