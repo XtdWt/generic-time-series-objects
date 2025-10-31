@@ -1,5 +1,4 @@
 use pyo3::prelude::*;
-use pyo3::exceptions::PyIndexError;
 
 
 #[pyclass]
@@ -16,11 +15,15 @@ impl TimeSeriesObject {
         TimeSeriesObject {timestamps: Vec::new(), values: Vec::new()}
     }
 
+    fn is_empty(&self) -> bool {
+        self.timestamps.is_empty()
+    }
+
     fn get_insertion_index(&self, ts: i32) -> usize {
         self.timestamps.binary_search(&ts).unwrap_or_else(|idx| idx)
     }
 
-    fn add(&mut self, ts: i32, value: Py<PyAny>) {
+    fn insert(&mut self, ts: i32, value: Py<PyAny>) {
         if self.timestamps.is_empty() || (ts > self.timestamps[self.timestamps.len()-1]) {
             self.timestamps.push(ts);
             self.values.push(value);
@@ -31,24 +34,23 @@ impl TimeSeriesObject {
         }
     }
 
-    fn value_at(&self, ts: i32) -> &Py<PyAny> {
+    fn point_at(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
         let idx = self.get_insertion_index(ts);
         if self.timestamps[idx] == ts {
-            &self.values[idx]
+            Some((&self.timestamps[idx], &self.values[idx]))
         } else if idx != 0 {
-            &self.values[idx - 1]
+            Some((&self.timestamps[idx-1], &self.values[idx-1]))
         } else {
-            &self.values[idx]
+            None
         }
     }
 
-    fn value_on(&self, ts: i32) -> PyResult<&Py<PyAny>> {
+    fn point_on(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
         let idx = self.get_insertion_index(ts);
         if self.timestamps[idx] == ts {
-            Ok(&self.values[idx])
+            Some((&self.timestamps[idx], &self.values[idx]))
         } else {
-            let err_str = format!("No value found at timestamp: {}", ts);
-             Err(PyIndexError::new_err(err_str))
+            None
         }
     }
 }
