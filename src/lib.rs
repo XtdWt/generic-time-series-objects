@@ -24,7 +24,7 @@ impl TimeSeriesObject {
     }
 
     fn insert(&mut self, ts: i32, value: Py<PyAny>) {
-        if self.timestamps.is_empty() || (ts > self.timestamps[self.timestamps.len()-1]) {
+        if self.is_empty() || (ts > self.timestamps[self.timestamps.len()-1]) {
             self.timestamps.push(ts);
             self.values.push(value);
         } else {
