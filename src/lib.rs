@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use pyo3::prelude::*;
 
 
@@ -19,6 +21,10 @@ impl TimeSeriesObject {
         self.timestamps.is_empty()
     }
 
+    fn __len__(&self) -> usize {
+        self.timestamps.len()
+    }
+
     fn get_insertion_index(&self, ts: i32) -> usize {
         self.timestamps.binary_search(&ts).unwrap_or_else(|idx| idx)
     }
@@ -32,6 +38,10 @@ impl TimeSeriesObject {
             self.timestamps.insert(idx, ts);
             self.values.insert(idx, value);
         }
+    }
+
+    fn insert_many(&mut self, ts_to_value_mapping: HashMap<i32, Py<PyAny>>) {
+
     }
 
     fn point_at(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
@@ -52,6 +62,28 @@ impl TimeSeriesObject {
         } else {
             None
         }
+    }
+
+    fn points_between(&self, start_ts: i32, end_ts: i32) -> Vec<(&i32,&Py<PyAny>)> {
+        let start_idx = self.get_insertion_index(start_ts);
+        let end_idx = self.get_insertion_index(end_ts);
+        let mut return_vec = Vec::new();
+        for idx in start_idx..end_idx {
+            let point_ts = &self.timestamps[idx];
+            let value_ts = &self.values[idx];
+            return_vec.push((point_ts, value_ts))
+        }
+        return_vec
+    }
+
+    fn as_dict(&self) -> HashMap<&i32, &Py<PyAny>> {
+        let mut return_dict = HashMap::new();
+        for idx in 0..self.__len__() {
+            let point_ts = &self.timestamps[idx];
+            let value_ts = &self.values[idx];
+            return_dict.insert(point_ts, value_ts);
+        }
+        return_dict
     }
 }
 
