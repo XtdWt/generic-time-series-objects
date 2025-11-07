@@ -33,11 +33,20 @@ impl TimeSeriesObject {
         if self.is_empty() || (ts > self.timestamps[self.timestamps.len()-1]) {
             self.timestamps.push(ts);
             self.values.push(value);
-        } else {
-            let idx = self.get_insertion_index(ts);
-            self.timestamps.insert(idx, ts);
-            self.values.insert(idx, value);
+            return
         }
+
+        let idx = self.get_insertion_index(ts);
+
+        let current_ts_at_idx = self.timestamps[idx];
+        if current_ts_at_idx == ts{
+            self.values[idx] = value;
+            return
+        }
+
+        self.timestamps.insert(idx, ts);
+        self.values.insert(idx, value);
+
     }
 
     fn insert_many(&mut self, ts_to_value_mapping: HashMap<i32, Py<PyAny>>) {
