@@ -29,12 +29,14 @@ def test_initialise_ts_object(test_points: list):
     assert len(obj) == len(test_points)
 
     assert obj.as_dict() == {i: val for i, val in enumerate(test_points)}
+    assert obj.as_list() == [(i, val) for i, val in enumerate(test_points)]
 
 
 def test_empty_object():
     obj = TimeSeriesObject()
     assert obj is not None
     assert obj.as_dict() == {}
+    assert obj.as_list() == []
     assert obj.point_at(0) is None
     assert obj.points_between(0, 1) == []
 
