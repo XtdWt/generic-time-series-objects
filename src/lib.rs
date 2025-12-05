@@ -10,23 +10,27 @@ struct TimeSeriesObject {
 }
 
 
-#[pymethods]
 impl TimeSeriesObject {
-    #[new]
-    fn new() -> Self {
-        TimeSeriesObject {timestamps: Vec::new(), values: Vec::new()}
+    fn get_insertion_index(&self, ts: i32) -> usize {
+        self.timestamps.binary_search(&ts).unwrap_or_else(|idx| idx)
     }
 
     fn is_empty(&self) -> bool {
         self.timestamps.is_empty()
     }
+}
+
+
+#[pymethods]
+impl TimeSeriesObject {
+
+    #[new]
+    fn new() -> Self {
+        TimeSeriesObject {timestamps: Vec::new(), values: Vec::new()}
+    }
 
     fn __len__(&self) -> usize {
         self.timestamps.len()
-    }
-
-    fn get_insertion_index(&self, ts: i32) -> usize {
-        self.timestamps.binary_search(&ts).unwrap_or_else(|idx| idx)
     }
 
     fn insert(&mut self, ts: i32, value: Py<PyAny>) {

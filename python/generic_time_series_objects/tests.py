@@ -30,6 +30,10 @@ def test_initialise_ts_object(test_points: list):
 
     assert obj.as_dict() == {i: val for i, val in enumerate(test_points)}
     assert obj.as_list() == [(i, val) for i, val in enumerate(test_points)]
+    with pytest.raises(AttributeError):
+        obj.get_insertion_index(3)
+    with pytest.raises(AttributeError):
+        obj.is_empty()
 
 
 def test_empty_object():
