@@ -95,6 +95,16 @@ impl TimeSeriesObject {
         }
         return_dict
     }
+
+    fn as_list(&self) -> Vec<(&i32, &Py<PyAny>)> {
+        let mut return_list = Vec::new();
+        for idx in 0..self.__len__() {
+            let point_ts = &self.timestamps[idx];
+            let value_ts = &self.values[idx];
+            return_list.push((point_ts, value_ts));
+        }
+        return_list
+    }
 }
 
 
