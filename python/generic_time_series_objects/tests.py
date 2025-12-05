@@ -1,6 +1,6 @@
 import pytest
 
-from rust_time_series_objects import TimeSeriesObject
+from generic_time_series_objects import TimeSeriesObject
 
 
 TEST_INIT_POINTS = [
@@ -26,6 +26,14 @@ def test_initialise_ts_object(test_points: list):
         point_time, point_value = obj.point_at(i)
         assert point_time == i
         assert point_value == val
+
+
+def test_empty_object():
+    obj = TimeSeriesObject()
+    assert obj is not None
+    assert obj.as_dict() == {}
+    assert obj.point_at(0) is None
+    assert obj.points_between(0, 1) == []
 
 
 @pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_AT_ON)
@@ -61,3 +69,14 @@ def test_ts_object_point_on(test_ts: list, test_points: list):
         point_time, point_value = obj.point_on(i)
         assert point_time in test_ts
         assert point_value in test_points
+    print(obj.points_between(0, 1_000_000))
+
+    print(obj.points_between(1, 14))
+    print(obj.points_between(1, 13))
+    print(obj.points_between(1, 12))
+    print(obj.points_between(1, 11))
+    print(obj.points_between(1, 10))
+    print(obj.points_between(0, 0))
+    print(len(obj))
+
+    print(obj.as_dict())

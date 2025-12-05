@@ -49,11 +49,15 @@ impl TimeSeriesObject {
 
     }
 
-    fn insert_many(&mut self, ts_to_value_mapping: HashMap<i32, Py<PyAny>>) {
-
-    }
+    // fn insert_many(&mut self, ts_to_value_mapping: HashMap<i32, Py<PyAny>>) {
+    //     // check inputs are sorted
+    //
+    // }
 
     fn point_at(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
+        if self.is_empty() {
+            return None
+        }
         let idx = self.get_insertion_index(ts);
         if self.timestamps[idx] == ts {
             Some((&self.timestamps[idx], &self.values[idx]))
@@ -65,6 +69,9 @@ impl TimeSeriesObject {
     }
 
     fn point_on(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
+        if self.is_empty() {
+            return None
+        }
         let idx = self.get_insertion_index(ts);
         if self.timestamps[idx] == ts {
             Some((&self.timestamps[idx], &self.values[idx]))
@@ -98,7 +105,7 @@ impl TimeSeriesObject {
 
 
 #[pymodule]
-fn rust_time_series_objects(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn generic_time_series_objects(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<TimeSeriesObject>()?;
     Ok(())
 }
