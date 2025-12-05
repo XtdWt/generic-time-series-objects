@@ -26,6 +26,9 @@ def test_initialise_ts_object(test_points: list):
         point_time, point_value = obj.point_at(i)
         assert point_time == i
         assert point_value == val
+    assert len(obj) == len(test_points)
+
+    assert obj.as_dict() == {i: val for i, val in enumerate(test_points)}
 
 
 def test_empty_object():
@@ -69,14 +72,19 @@ def test_ts_object_point_on(test_ts: list, test_points: list):
         point_time, point_value = obj.point_on(i)
         assert point_time in test_ts
         assert point_value in test_points
-    print(obj.points_between(0, 1_000_000))
 
-    print(obj.points_between(1, 14))
-    print(obj.points_between(1, 13))
-    print(obj.points_between(1, 12))
-    print(obj.points_between(1, 11))
-    print(obj.points_between(1, 10))
-    print(obj.points_between(0, 0))
-    print(len(obj))
 
-    print(obj.as_dict())
+@pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_AT_ON)
+def test_ts_points_between(test_ts: list, test_points: list):
+    obj = TimeSeriesObject()
+    for ts, val in zip(test_ts, test_points):
+        obj.insert(ts, val)
+
+    assert [x for _, x in obj.points_between(0, 1_000_000)] == test_points
+    assert [x for _, x in obj.points_between(1, 16)] == [10, 20, 30, 40]
+    assert [x for _, x in obj.points_between(1, 15)] == [10, 20, 30]
+    assert [x for _, x in obj.points_between(1, 14)] == [10, 20, 30]
+    assert [x for _, x in obj.points_between(2, 12)] == [20, 30]
+    assert [x for _, x in obj.points_between(2, 11)] == [20, 30]
+    assert [x for _, x in obj.points_between(1, 10)] == [10, 20]
+    assert [x for _, x in obj.points_between(0, 0)] == []

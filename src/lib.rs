@@ -46,13 +46,7 @@ impl TimeSeriesObject {
 
         self.timestamps.insert(idx, ts);
         self.values.insert(idx, value);
-
     }
-
-    // fn insert_many(&mut self, ts_to_value_mapping: HashMap<i32, Py<PyAny>>) {
-    //     // check inputs are sorted
-    //
-    // }
 
     fn point_at(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
         if self.is_empty() {
