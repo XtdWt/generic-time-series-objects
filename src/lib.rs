@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-
+use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
 
@@ -33,23 +33,54 @@ impl TimeSeriesObject {
         self.timestamps.len()
     }
 
-    fn insert(&mut self, ts: i32, value: Py<PyAny>) {
+    #[pyo3(signature = (ts, value, overwrite = false))]
+    fn insert(&mut self, ts: i32, value: Py<PyAny>, overwrite: bool) -> PyResult<()> {
         if self.is_empty() || (ts > self.timestamps[self.timestamps.len()-1]) {
             self.timestamps.push(ts);
             self.values.push(value);
-            return
+            return Ok(())
         }
-
         let idx = self.get_insertion_index(ts);
 
         let current_ts_at_idx = self.timestamps[idx];
-        if current_ts_at_idx == ts{
+
+        if (current_ts_at_idx == ts) & overwrite{
             self.values[idx] = value;
-            return
+            return Ok(())
+        }
+
+        if (current_ts_at_idx == ts) & !overwrite{
+            // error
+            let err_msg = "Existing insertion index is already in use";
+            return Err(PyValueError::new_err(err_msg))
         }
 
         self.timestamps.insert(idx, ts);
         self.values.insert(idx, value);
+        Ok(())
+    }
+
+    fn delete(&mut self, ts: i32) -> PyResult<()> {
+        if self.is_empty() {
+            return Err(PyValueError::new_err("TimeSeriesObject is empty"))
+        }
+        let delete_idx = self.get_insertion_index(ts);
+        self.timestamps.remove(delete_idx);
+        self.values.remove(delete_idx);
+        Ok(())
+    }
+
+    fn update(&mut self, ts: i32, value: Py<PyAny>) -> PyResult<()> {
+        if self.is_empty() {
+            return Err(PyValueError::new_err("TimeSeriesObject is empty"))
+        }
+        let update_idx = self.get_insertion_index(ts);
+        if self.timestamps[update_idx] != ts {
+            let err_msg = "";
+            return Err(PyValueError::new_err(err_msg))
+        }
+        self.values[update_idx] = value;
+        Ok(())
     }
 
     fn point_at(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
