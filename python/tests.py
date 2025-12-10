@@ -111,13 +111,13 @@ def test_update_delete_from_object(test_ts: list, test_points: list):
     obj.insert(test_ts[0], test_points[0], overwrite=True)
 
     # check index must exist for update
-    with pytest.raises(ValueError):
+    with pytest.raises(IndexError):
         obj.update(0, None)
 
     obj.update(test_ts[0], None)
 
     # check can delete
-    with pytest.raises(ValueError):
+    with pytest.raises(IndexError):
         obj.delete(0)
 
     for ts in test_ts:
