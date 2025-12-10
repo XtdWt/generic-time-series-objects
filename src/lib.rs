@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use pyo3::exceptions::PyValueError;
+use pyo3::exceptions::{PyValueError, PyIndexError};
 use pyo3::prelude::*;
 
 
@@ -51,9 +51,7 @@ impl TimeSeriesObject {
         }
 
         if (current_ts_at_idx == ts) & !overwrite{
-            // error
-            let err_msg = "Existing insertion index is already in use";
-            return Err(PyValueError::new_err(err_msg))
+            return Err(PyValueError::new_err("Timestamp already exists in TimeSeriesObject, set overwrite=True to overwrite this value"))
         }
 
         self.timestamps.insert(idx, ts);
@@ -67,7 +65,7 @@ impl TimeSeriesObject {
         }
         let delete_idx = self.get_insertion_index(ts);
         if self.timestamps[delete_idx] != ts {
-            return Err(PyValueError::new_err("Timestamp does not exist in TimeSeriesObject"))
+            return Err(PyIndexError::new_err("Timestamp does not exist in TimeSeriesObject"))
         }
         self.timestamps.remove(delete_idx);
         self.values.remove(delete_idx);
@@ -80,8 +78,7 @@ impl TimeSeriesObject {
         }
         let update_idx = self.get_insertion_index(ts);
         if self.timestamps[update_idx] != ts {
-            let err_msg = "Timestamp does not exist in TimeSeriesObject";
-            return Err(PyValueError::new_err(err_msg))
+            return Err(PyIndexError::new_err("Timestamp does not exist in TimeSeriesObject"))
         }
         self.values[update_idx] = value;
         Ok(())
