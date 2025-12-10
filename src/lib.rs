@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
@@ -65,6 +66,9 @@ impl TimeSeriesObject {
             return Err(PyValueError::new_err("TimeSeriesObject is empty"))
         }
         let delete_idx = self.get_insertion_index(ts);
+        if self.timestamps[delete_idx] != ts {
+            return Err(PyValueError::new_err("Timestamp does not exist in TimeSeriesObject"))
+        }
         self.timestamps.remove(delete_idx);
         self.values.remove(delete_idx);
         Ok(())
@@ -76,7 +80,7 @@ impl TimeSeriesObject {
         }
         let update_idx = self.get_insertion_index(ts);
         if self.timestamps[update_idx] != ts {
-            let err_msg = "";
+            let err_msg = "Timestamp does not exist in TimeSeriesObject";
             return Err(PyValueError::new_err(err_msg))
         }
         self.values[update_idx] = value;

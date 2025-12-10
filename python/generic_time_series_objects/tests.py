@@ -11,7 +11,7 @@ TEST_INIT_POINTS = [
 ]
 
 TEST_POINT_AT_ON = [
-    ([1, 5, 10, 15], [10, 20, 30, 40])
+    ([1, 5, 10, 15], [10, 20, 30, 40]),
 ]
 
 
@@ -43,6 +43,10 @@ def test_empty_object():
     assert obj.as_list() == []
     assert obj.point_at(0) is None
     assert obj.points_between(0, 1) == []
+    with pytest.raises(ValueError):
+        obj.update(100, None)
+    with pytest.raises(ValueError):
+        obj.delete(100)
 
 
 @pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_AT_ON)
@@ -85,8 +89,7 @@ def test_ts_points_between(test_ts: list, test_points: list):
     obj = TimeSeriesObject()
     for ts, val in zip(test_ts, test_points):
         obj.insert(ts, val)
-
-    assert [x for _, x in obj.points_between(0, 1_000_000)] == test_points
+    assert [x for _, x in obj.points_between(0, 1_000_000)] == [10, 20, 30, 40]
     assert [x for _, x in obj.points_between(1, 16)] == [10, 20, 30, 40]
     assert [x for _, x in obj.points_between(1, 15)] == [10, 20, 30]
     assert [x for _, x in obj.points_between(1, 14)] == [10, 20, 30]
@@ -94,3 +97,31 @@ def test_ts_points_between(test_ts: list, test_points: list):
     assert [x for _, x in obj.points_between(2, 11)] == [20, 30]
     assert [x for _, x in obj.points_between(1, 10)] == [10, 20]
     assert [x for _, x in obj.points_between(0, 0)] == []
+
+
+@pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_AT_ON)
+def test_update_delete_from_object(test_ts: list, test_points: list):
+    obj = TimeSeriesObject()
+    for ts, val in zip(test_ts, test_points):
+        obj.insert(ts, val)
+    # cannot add same thing twice
+    with pytest.raises(ValueError):
+        obj.insert(test_ts[0], test_points[0])
+
+    obj.insert(test_ts[0], test_points[0], overwrite=True)
+
+    # check index must exist for update
+    with pytest.raises(ValueError):
+        obj.update(0, None)
+
+    obj.update(test_ts[0], None)
+
+    # check can delete
+    with pytest.raises(ValueError):
+        obj.delete(0)
+
+    for ts in test_ts:
+        obj.delete(ts)
+
+    with pytest.raises(ValueError):
+        obj.delete(test_ts[0])
