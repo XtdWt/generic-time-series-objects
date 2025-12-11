@@ -43,6 +43,7 @@ Methods return None for success and raises Exception if failed to perform operat
 #### insert
 Inserts a Python object at a given timestamp. <br>
 _Arguments_
+*  **`self`** (`TimeSeriesObject`): The object itself.
 *  **`ts`** (`int`): Timestamp of the data point.
 *  **`value`** (`Any`): The Python object to be stored.
 *  **`overwrite`** (`bool`): Defaults to `False`. Determines what to do if a provide timestamp already exists, if 
@@ -64,6 +65,7 @@ obj.insert(1, {1, 2, 3}, overwrite=True)
 #### update
 Updates the point at a given timestamp. <br>
 _Arguments_
+*  **`self`** (`TimeSeriesObject`): The object itself.
 *  **`ts`** (`int`): Timestamp of the point we want to update.
 *  **`value`** (`Any`): The Python object we want to update with.
 
@@ -85,6 +87,7 @@ obj.update(1, {1, 2, 3, 4})
 #### delete
 Deletes the data point at a given timestamp. <br>
 _Arguments_
+*  **`self`** (`TimeSeriesObject`): The object itself.
 *  **`ts`** (`int`): Timestamp of the point we want to delete.
 
 _Output/Exceptions_
@@ -105,8 +108,9 @@ obj.delete(1)
 ### Retrieving Data Points
 Methods return a tuple of the timestamp and Python object for success and None if nothing is found.
 #### point
-The data point on or before a certain timestamp<br>
+Fetches the data point on or before a certain timestamp.<br>
 _Arguments_
+*  **`self`** (`TimeSeriesObject`): The object itself.
 *  **`ts`** (`int`): Timestamp on or before the time we want to retrieve data for.
 
 _Output/Exceptions_
@@ -126,8 +130,9 @@ print(obj.point(5))  # prints {1, 2, 3}
 print(obj.point(1))  # prints None
 ```
 #### point_on
-The data point exactly on a certain timestamp<br>
+Fetches the data point exactly on a certain timestamp.<br>
 _Arguments_
+*  **`self`** (`TimeSeriesObject`): The object itself.
 *  **`ts`** (`int`): Timestamp exactly equal to the time we want to retrieve data for.
 
 _Output/Exceptions_
@@ -147,33 +152,64 @@ print(obj.point_on(2))  # prints {1, 2, 3}
 ```
 
 #### points_between
+Fetches all data points between the two provided timestamps, inclusive of start and exclusive of end [start_ts, end_ts).
+<br>
 _Arguments_
-*  **``** (``):
+*  **`self`** (`TimeSeriesObject`): The object itself.
+*  **`start_ts`** (`int`): Start timestamp to filter for, inclusive.
+*  **`end_ts`** (`int`): End timestamp to filter for, exclusive.
 
 _Output/Exceptions_
-*  **``** (``):
+*  **`points`** (`list[tuple[int, Any]]`): List of points between the starting and ending timestamp.
 
 _Example:_
 ```python
+from generic_time_series_objects import TimeSeriesObject
+
+obj = TimeSeriesObject()
+obj.insert(2, {1})
+obj.insert(5, {1, 2})
+obj.insert(10, {1, 2, 3})
+print(obj.point_between(1, 100))  # prints [(2, {1}), (5, {1, 2}), (10, {1, 2, 3})]
+print(obj.point_between(1, 10))  # prints [(2, {1}), (5, {1, 2})]
+print(obj.point_between(1, 1))  # prints []
+
 ```
 ### Transforming Data Type
+Methods return the data type named in the method as the outer return type.
 #### as_dict
+Transforms all data points in the TimeSeries to a mapping between the timestamp and the Python object.<br>
 _Arguments_
-*  **``** (``):
+*  **`self`** (`TimeSeriesObject`): The object itself.
 
 _Output/Exceptions_
-*  **``** (``):
+*  **`points_as_dict`** (`dict[int, Any]`): All data points in the form of a dictionary mapping timestamp to Python 
+object.
 
 _Example:_
 ```python
+from generic_time_series_objects import TimeSeriesObject
+
+obj = TimeSeriesObject()
+print(obj.as_dict())  # prints {}
+obj.insert(1, ['hello'])  
+print(obj.as_dict())  # prints {1: ['hello']}
 ```
 #### as_list
+Transforms all data points in the TimeSeries to a list of tuples containing the timestamp and the Python object.<br>
 _Arguments_
-*  **``** (``):
+*  **`self`** (`TimeSeriesObject`): The object itself.
 
 _Output/Exceptions_
-*  **``** (``):
+*  **`points_as_list`** (`list[tuple[int, Any]]`): All data points in the form of a list of tuples with each tuple 
+containing a timestamp and the Python object.
 
 _Example:_
 ```python
+from generic_time_series_objects import TimeSeriesObject
+
+obj = TimeSeriesObject()
+print(obj.as_list())  # prints []
+obj.insert(1, ['hello'])  
+print(obj.as_list())  # prints [(1, ['hello'])]
 ```
