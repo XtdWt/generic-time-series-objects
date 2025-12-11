@@ -84,7 +84,7 @@ impl TimeSeriesObject {
         Ok(())
     }
 
-    fn point_at(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
+    fn point(&self, ts: i32) -> Option<(&i32, &Py<PyAny>)> {
         if self.is_empty() {
             return None
         }
