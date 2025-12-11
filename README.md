@@ -29,7 +29,7 @@ _Arguments_
 *  **`self`** (`TimeSeriesObject`): The object itself.
 
 _Output/Exceptions_
-* (`int`): Number of timestamps inserted into the object.
+* (`int`): Number of data points inserted into the object.
 
 _Example:_
 ```python
