@@ -34,6 +34,15 @@ impl TimeSeriesObject {
         self.timestamps.len()
     }
 
+    fn __repr__(&self) -> String {
+        let timestamps = &self.timestamps;
+        format!("TimeSeriesObject(timestamps={timestamps:?})")
+    }
+
+    fn __bool__(&self) -> bool {
+        self.is_empty()
+    }
+
     #[pyo3(signature = (ts, value, overwrite = false))]
     fn insert(&mut self, ts: i32, value: Py<PyAny>, overwrite: bool) -> PyResult<()> {
         if self.is_empty() || (ts > self.timestamps[self.timestamps.len()-1]) {
