@@ -5,23 +5,42 @@ value. This project is built in rust, with [pyo3](https://github.com/PyO3/pyo3) 
 compiled using [maturin](https://github.com/PyO3/maturin). Tests are written in python 
 (with pytest).
 
-## TimeSeriesObject Interface
-Methods to interact with the TimeSeriesObject Class:
-### Dunder Methods
+> [!NOTE]
+>
+> Rust code is compiled using `maturin develop --uv`. <br>
+> Test cases are run using `pytest .\python\tests.py`.
 
-#### __init\_\_
-Initialises the object with no arguments. <br>
+## TimeSeriesObject Interface
+Methods to interact with the TimeSeriesObject Class.
+### Dunder Methods
+#### __new\_\_
+Creates the object with no arguments. <br>
 _Arguments_
 *  **`self`** (`TimeSeriesObject`): The object itself.
 
 _Output/Exceptions_
-*  **`None`** (`NoneType`): Initialises the object.
+*  (`TimeSeriesObject`): Returns the created object.
 
 _Example:_
 ```python
 from generic_time_series_objects import TimeSeriesObject
 
 obj = TimeSeriesObject()
+```
+#### __repr\_\_
+Representation of the object. <br>
+_Arguments_
+*  **`self`** (`TimeSeriesObject`): The object itself.
+
+_Output/Exceptions_
+*  (`str`): Returns a string with the object name and a list of timestamps.
+
+_Example:_
+```python
+from generic_time_series_objects import TimeSeriesObject
+
+obj = TimeSeriesObject()
+print(obj)  # prints "TimeSeriesObject(timestamps=[])"
 ```
 #### __len\_\_
 Returns the number of data points currently stored in the time series object. <br>
@@ -38,6 +57,21 @@ from generic_time_series_objects import TimeSeriesObject
 obj = TimeSeriesObject()
 print(len(obj))  # prints 0
 ```
+#### __bool\_\_
+Returns a boolean for if the object contains data points or not. <br>
+_Arguments_
+*  **`self`** (`TimeSeriesObject`): The object itself.
+
+_Output/Exceptions_
+*  (`bool`): False if there are no data points, otherwise True.
+
+_Example:_
+```python
+from generic_time_series_objects import TimeSeriesObject
+
+obj = TimeSeriesObject()
+print(bool(obj))  # prints False
+```
 ### Mutating Data
 Methods return None for success and raises Exception if failed to perform operation.
 #### insert
@@ -50,7 +84,7 @@ _Arguments_
 `overwrite=False`, raises Exception otherwise overwrites the existing data point.
 
 _Output/Exceptions_
-*  **`None`** (`NoneType`): Successfully inserted data point at timestamp.
+*  (`None`): Successfully inserted data point at timestamp.
 * **`ValueError`** (`Exception`): Timestamp provided already has existing data point and overwrite is set to False.
 
 _Example:_
@@ -70,7 +104,7 @@ _Arguments_
 *  **`value`** (`Any`): The Python object we want to update with.
 
 _Output/Exceptions_
-*  **`None`** (`NoneType`): Successfully inserted Python object at timestamp.
+*  (`None`): Successfully inserted Python object at timestamp.
 *  **`ValueError`** (`Exception`): TimeSeriesObject was empty and could not update.
 *  **`IndexError`** (`Exception`): Provided timestamp does not exist within TimeSeriesObject.
 
@@ -91,7 +125,7 @@ _Arguments_
 *  **`ts`** (`int`): Timestamp of the point we want to delete.
 
 _Output/Exceptions_
-*  **`None`** (`NoneType`): Successfully deleted data point.
+*  (`None`): Successfully deleted data point.
 *  **`ValueError`** (`Exception`): TimeSeriesObject was empty and could not delete.
 *  **`IndexError`** (`Exception`): Provided timestamp does not exist within TimeSeriesObject.
 
@@ -114,7 +148,7 @@ _Arguments_
 *  **`ts`** (`int`): Timestamp on or before the time we want to retrieve data for.
 
 _Output/Exceptions_
-*  **`point`** (`tuple[int, Any]`): The data point, as a tuple of timestamp and Python object, that was retrieved.
+*  (`tuple[int, Any]`): The data point, as a tuple of timestamp and Python object, that was retrieved.
 *  **`None`** (`NoneType`): Nothing was found, in this case timestamp provided was before the minimum timestamp in the 
 TimeSeriesObject.
 
@@ -136,7 +170,7 @@ _Arguments_
 *  **`ts`** (`int`): Timestamp exactly equal to the time we want to retrieve data for.
 
 _Output/Exceptions_
-*  **`point`** (`tuple[int, Any]`): The data point, as a tuple of timestamp and Python object, that was retrieved.
+*  (`tuple[int, Any]`): The data point, as a tuple of timestamp and Python object, that was retrieved.
 *  **`None`** (`NoneType`): Nothing was found at provided timestamp.
 
 _Example:_
@@ -160,7 +194,7 @@ _Arguments_
 *  **`end_ts`** (`int`): End timestamp to filter for, exclusive.
 
 _Output/Exceptions_
-*  **`points`** (`list[tuple[int, Any]]`): List of points between the starting and ending timestamp.
+*  (`list[tuple[int, Any]]`): List of points between the starting and ending timestamp.
 
 _Example:_
 ```python
@@ -183,7 +217,7 @@ _Arguments_
 *  **`self`** (`TimeSeriesObject`): The object itself.
 
 _Output/Exceptions_
-*  **`points_as_dict`** (`dict[int, Any]`): All data points in the form of a dictionary mapping timestamp to Python 
+*  (`dict[int, Any]`): All data points in the form of a dictionary mapping timestamp to Python 
 object.
 
 _Example:_
@@ -201,7 +235,7 @@ _Arguments_
 *  **`self`** (`TimeSeriesObject`): The object itself.
 
 _Output/Exceptions_
-*  **`points_as_list`** (`list[tuple[int, Any]]`): All data points in the form of a list of tuples with each tuple 
+*  (`list[tuple[int, Any]]`): All data points in the form of a list of tuples with each tuple 
 containing a timestamp and the Python object.
 
 _Example:_
