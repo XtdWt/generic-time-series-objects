@@ -16,7 +16,7 @@ class TimeSeriesDataBaseclass(ABC):
         ts_data_flag = TS_DATA_FLAG
         for method_name in dir(self):
             method = getattr(self, method_name)
-            if not getattr(method, ts_data_flag, lambda: False):
+            if not getattr(method, ts_data_flag, False):
                continue
             self.data[method_name] = TimeSeriesObject()
 
@@ -34,7 +34,7 @@ class TimeSeriesDataBaseclass(ABC):
 
 
 def time_series_data(fn):
-    fn.TS_DATA_FLAG = True
+    fn.is_time_series_data = True
     @wraps(fn)
     def wrapper(self, *args, **kwargs) -> Any:
         if self.timestamp is None:
