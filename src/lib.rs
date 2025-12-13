@@ -97,11 +97,19 @@ impl TimeSeriesObject {
         if self.is_empty() {
             return None
         }
+
         let idx = self.get_insertion_index(ts);
-        if self.timestamps[idx] == ts {
-            Some((&self.timestamps[idx], &self.values[idx]))
-        } else if idx != 0 {
+        if idx == 0 && self.timestamps[idx] == ts {
+            return Some((&self.timestamps[idx], &self.values[idx]))
+        }
+        if idx == 0 && self.timestamps[idx] != ts{
+            return None
+        }
+
+        if (idx == self.__len__()) || self.timestamps[idx] != ts {
             Some((&self.timestamps[idx-1], &self.values[idx-1]))
+        } else if self.timestamps[idx] == ts{
+            Some((&self.timestamps[idx], &self.values[idx]))
         } else {
             None
         }
@@ -112,7 +120,7 @@ impl TimeSeriesObject {
             return None
         }
         let idx = self.get_insertion_index(ts);
-        if self.timestamps[idx] == ts {
+        if (idx != self.__len__()) && self.timestamps[idx] == ts {
             Some((&self.timestamps[idx], &self.values[idx]))
         } else {
             None
