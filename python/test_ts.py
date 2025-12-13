@@ -1,5 +1,4 @@
 import pytest
-from line_profiler import profile
 
 from generic_time_series_objects import TimeSeriesObject
 
@@ -16,7 +15,6 @@ TEST_POINT_DATA = [
 ]
 
 
-@profile
 @pytest.mark.parametrize("test_points", TEST_INIT_POINTS)
 def test_initialise_ts_object(test_points: list):
     obj = TimeSeriesObject()
@@ -38,7 +36,6 @@ def test_initialise_ts_object(test_points: list):
         obj.is_empty()
 
 
-@profile
 def test_empty_object():
     obj = TimeSeriesObject()
     assert obj is not None
@@ -52,7 +49,6 @@ def test_empty_object():
         obj.delete(100)
 
 
-@profile
 @pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_DATA)
 def test_ts_object_point(test_ts: list, test_points: list):
     obj = TimeSeriesObject()
@@ -73,7 +69,6 @@ def test_ts_object_point(test_ts: list, test_points: list):
         assert point_value == loop_test_points[0]
 
 
-@profile
 @pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_DATA)
 def test_ts_object_point_on(test_ts: list, test_points: list):
     obj = TimeSeriesObject()
@@ -89,7 +84,6 @@ def test_ts_object_point_on(test_ts: list, test_points: list):
         assert point_value in test_points
 
 
-@profile
 @pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_DATA)
 def test_ts_points_between(test_ts: list, test_points: list):
     obj = TimeSeriesObject()
@@ -105,7 +99,6 @@ def test_ts_points_between(test_ts: list, test_points: list):
     assert [x for _, x in obj.points_between(0, 0)] == []
 
 
-@profile
 @pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_DATA)
 def test_update_delete_from_object(test_ts: list, test_points: list):
     obj = TimeSeriesObject()
