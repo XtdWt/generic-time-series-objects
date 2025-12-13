@@ -7,8 +7,8 @@ compiled using [maturin](https://github.com/PyO3/maturin). Tests are written in 
 
 > [!NOTE]
 >
-> Rust code is compiled using `maturin develop --uv`. <br>
-> Test cases are run using `pytest .\python\tests.py`.
+> Rust code is compiled using `maturin develop --uv` (or `maturin develop --uv --release`). <br>
+> Test cases are then run using `pytest .\python\test_ts.py`.
 
 ## TimeSeriesObject Interface
 Methods to interact with the TimeSeriesObject Class.
@@ -80,7 +80,7 @@ _Arguments_
 *  **`self`** (`TimeSeriesObject`): The object itself.
 *  **`ts`** (`int`): Timestamp of the data point.
 *  **`value`** (`Any`): The Python object to be stored.
-*  **`overwrite`** (`bool`): Defaults to `False`. Determines what to do if a provide timestamp already exists, if 
+*  **`overwrite`** (`bool`): Defaults to `False`. Determines what to do if a provided timestamp already exists, if 
 `overwrite=False`, raises Exception otherwise overwrites the existing data point.
 
 _Output/Exceptions_
@@ -204,15 +204,15 @@ obj = TimeSeriesObject()
 obj.insert(2, {1})
 obj.insert(5, {1, 2})
 obj.insert(10, {1, 2, 3})
-print(obj.point_between(1, 100))  # prints [(2, {1}), (5, {1, 2}), (10, {1, 2, 3})]
-print(obj.point_between(1, 10))  # prints [(2, {1}), (5, {1, 2})]
-print(obj.point_between(1, 1))  # prints []
+print(obj.points_between(1, 100))  # prints [(2, {1}), (5, {1, 2}), (10, {1, 2, 3})]
+print(obj.points_between(1, 10))  # prints [(2, {1}), (5, {1, 2})]
+print(obj.points_between(1, 1))  # prints []
 
 ```
 ### Transforming Data Type
 Methods return the data type named in the method as the outer return type.
 #### as_dict
-Transforms all data points in the TimeSeries to a mapping between the timestamp and the Python object.<br>
+Transforms all data points in the TimeSeriesObject to a mapping between the timestamp and the Python object.<br>
 _Arguments_
 *  **`self`** (`TimeSeriesObject`): The object itself.
 
@@ -230,7 +230,7 @@ obj.insert(1, ['hello'])
 print(obj.as_dict())  # prints {1: ['hello']}
 ```
 #### as_list
-Transforms all data points in the TimeSeries to a list of tuples containing the timestamp and the Python object.<br>
+Transforms all data points in the TimeSeriesObject to a list of tuples containing the timestamp and the Python object.<br>
 _Arguments_
 *  **`self`** (`TimeSeriesObject`): The object itself.
 
