@@ -40,7 +40,7 @@ impl TimeSeriesObject {
     }
 
     fn __bool__(&self) -> bool {
-        self.is_empty()
+        !self.is_empty()
     }
 
     #[pyo3(signature = (ts, value, overwrite = false))]
