@@ -28,6 +28,9 @@ class TestClass(TimeSeriesDataBaseclass):
     def D(self):
         return 1
 
+    def E(self):
+        return 0
+
 test_obj = TestClass(2, 3, 4)
 print(test_obj.A(), test_obj.B(), test_obj.C(), test_obj.D())
 test_obj.set_date(datetime.datetime(2025, 12, 13))
@@ -37,3 +40,4 @@ test_obj.reset_data()
 print(test_obj.A(), test_obj.B(), test_obj.C(), test_obj.D())
 test_obj.set_date(datetime.datetime(2025, 12, 14))
 print(test_obj.A(), test_obj.B(), test_obj.C(), test_obj.D())
+print(test_obj.data)
