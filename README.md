@@ -105,7 +105,7 @@ _Arguments_
 
 _Output/Exceptions_
 *  (`None`): Successfully inserted Python object at timestamp.
-*  **`ValueError`** (`Exception`): TimeSeriesObject was empty and could not update.
+*  **`ValueError`** (`Exception`): TimeSeriesObject is empty and could not update.
 *  **`IndexError`** (`Exception`): Provided timestamp does not exist within TimeSeriesObject.
 
 _Example:_
@@ -126,7 +126,7 @@ _Arguments_
 
 _Output/Exceptions_
 *  (`None`): Successfully deleted data point.
-*  **`ValueError`** (`Exception`): TimeSeriesObject was empty and could not delete.
+*  **`ValueError`** (`Exception`): TimeSeriesObject is empty and could not delete.
 *  **`IndexError`** (`Exception`): Provided timestamp does not exist within TimeSeriesObject.
 
 _Example:_
