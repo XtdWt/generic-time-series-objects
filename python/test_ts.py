@@ -68,6 +68,8 @@ def test_ts_object_point(test_ts: list, test_points: list):
         assert point_time >= loop_test_ts[0]
         assert point_value == loop_test_points[0]
 
+    assert obj.point(100000) == (test_ts[-1], test_points[-1])
+
 
 @pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_DATA)
 def test_ts_object_point_on(test_ts: list, test_points: list):
@@ -82,6 +84,8 @@ def test_ts_object_point_on(test_ts: list, test_points: list):
         point_time, point_value = obj.point_on(i)
         assert point_time in test_ts
         assert point_value in test_points
+
+    assert obj.point_on(100000) is None
 
 
 @pytest.mark.parametrize(("test_ts", "test_points"), TEST_POINT_DATA)
