@@ -8,7 +8,15 @@ compiled using [maturin](https://github.com/PyO3/maturin). Tests are written in 
 > [!NOTE]
 >
 > Rust code is compiled using `maturin develop --uv` (or `maturin develop --uv --release`). <br>
-> Test cases are then run using `pytest .\python\test_ts.py`.
+> Test cases are then run using `pytest .\python\test_ts.py`. 
+
+> [!IMPORTANT]
+> 
+> Work in progress:
+> - [ ] Time Series Data BaseClass to manage methods as timeseries that can change through time.
+> - [ ] Add further tests to `test_ts.py`
+> - [ ] Proper set up of `test_ts_data_class.py`
+> - [ ] Migrate the Time Series Data BaseClass into `lib.rs`
 
 ## TimeSeriesObject Interface
 Methods to interact with the TimeSeriesObject Class.
