@@ -1,5 +1,5 @@
 [package]
-name = "generic-time-series-objects"
+name = "generic_time_series_objects"
 version = "0.1.0"
 edition = "2024"
 

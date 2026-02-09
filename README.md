@@ -1,4 +1,4 @@
-# Generic Time Series Objects
+# [Generic Time Series Objects](https://pypi.org/project/generic_time_series_objects/)
 Store Python objects in a time series to capture evolving data over time. Built to be highly
 generic and capable of storing any python class, even custom, against a timestamp (integer) 
 value. This project is built in rust, with [pyo3](https://github.com/PyO3/pyo3) bindings, and 
@@ -8,7 +8,7 @@ compiled using [maturin](https://github.com/PyO3/maturin). Tests are written in 
 > [!NOTE]
 >
 > Rust code is compiled using `maturin develop --uv` (or `maturin develop --uv --release`). <br>
-> Test cases are then run using `pytest .\python\test_ts.py`. 
+> Test cases are then run using `pytest .\python\test_ts.py`.
 
 > [!IMPORTANT]
 > 
