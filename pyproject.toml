@@ -1,6 +1,6 @@
 [project]
 name = "generic_time_series_objects"
-version = "0.2.1"
+version = "0.2.2"
 description = "Generic Time Series Objects for Python"
 requires-python = ">=3.13"
 dependencies = [
